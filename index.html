@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AR Album - 30 Markers Auto</title>
+  <title>AR Album - A to Z Markers</title>
 
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -30,7 +30,12 @@
 <body>
 
   <!-- Fullscreen Video -->
-  <video id="fullscreenVideo" playsinline webkit-playsinline></video>
+  <video 
+    id="fullscreenVideo" 
+    playsinline 
+    webkit-playsinline 
+    autoplay
+  ></video>
 
   <a-scene
     mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1;"
@@ -50,10 +55,11 @@
     const fullscreenVideo = document.getElementById("fullscreenVideo");
     const scene = document.querySelector("a-scene");
 
-    const MAX_TARGETS = 30; // 🔥 30 markers support
+    // 🔥 A to Z letters
+    const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-    function playVideo(index) {
-      fullscreenVideo.src = `./videos/${index}.mp4`;
+    function playVideo(letter) {
+      fullscreenVideo.src = `./videos/${letter}.mp4`;
       fullscreenVideo.style.display = "block";
       fullscreenVideo.play().catch(() => {});
     }
@@ -64,18 +70,21 @@
       fullscreenVideo.style.display = "none";
     }
 
-    for (let i = 0; i < MAX_TARGETS; i++) {
+    LETTERS.forEach((letter, index) => {
+
       const entity = document.createElement("a-entity");
-      entity.setAttribute("mindar-image-target", `targetIndex: ${i}`);
+      entity.setAttribute("mindar-image-target", `targetIndex: ${index}`);
 
       entity.addEventListener("targetFound", () => {
-        playVideo(i);
+        playVideo(letter);
       });
 
       entity.addEventListener("targetLost", stopVideo);
 
       scene.appendChild(entity);
-    }
+
+    });
+
   </script>
 
 </body>
