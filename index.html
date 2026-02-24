@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AR Album - A to Z Markers</title>
+  <title>AR Album - 30 Markers (001 Format)</title>
 
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -29,7 +29,6 @@
 
 <body>
 
-  <!-- Fullscreen Video -->
   <video 
     id="fullscreenVideo" 
     playsinline 
@@ -46,7 +45,6 @@
   >
 
     <a-assets></a-assets>
-
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
   </a-scene>
@@ -55,11 +53,15 @@
     const fullscreenVideo = document.getElementById("fullscreenVideo");
     const scene = document.querySelector("a-scene");
 
-    // 🔥 A to Z letters
-    const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    const MAX_TARGETS = 30; // 30 markers
 
-    function playVideo(letter) {
-      fullscreenVideo.src = `./videos/${letter}.mp4`;
+    function formatNumber(num) {
+      return String(num).padStart(3, '0'); // 001 format
+    }
+
+    function playVideo(index) {
+      const videoName = formatNumber(index + 1); // 1→001
+      fullscreenVideo.src = `./videos/${videoName}.mp4`;
       fullscreenVideo.style.display = "block";
       fullscreenVideo.play().catch(() => {});
     }
@@ -70,21 +72,18 @@
       fullscreenVideo.style.display = "none";
     }
 
-    LETTERS.forEach((letter, index) => {
-
+    for (let i = 0; i < MAX_TARGETS; i++) {
       const entity = document.createElement("a-entity");
-      entity.setAttribute("mindar-image-target", `targetIndex: ${index}`);
+      entity.setAttribute("mindar-image-target", `targetIndex: ${i}`);
 
       entity.addEventListener("targetFound", () => {
-        playVideo(letter);
+        playVideo(i);
       });
 
       entity.addEventListener("targetLost", stopVideo);
 
       scene.appendChild(entity);
-
-    });
-
+    }
   </script>
 
 </body>
